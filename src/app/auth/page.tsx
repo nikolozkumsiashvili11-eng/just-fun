@@ -14,6 +14,29 @@ export default function AuthPage() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
 
+    const getFriendlyError = (message: string): string => {
+        const msg = message.toLowerCase();
+        if (msg.includes("rate limit") || msg.includes("email rate limit") || msg.includes("over_email_send_rate_limit") || msg.includes("too many requests")) {
+            return "Our registration system is temporarily at capacity. Please try again in a few minutes. If this keeps happening, contact support.";
+        }
+        if (msg.includes("user already registered") || msg.includes("already been registered")) {
+            return "An account with this email already exists. Try signing in instead.";
+        }
+        if (msg.includes("invalid email")) {
+            return "Please enter a valid email address.";
+        }
+        if (msg.includes("password") && msg.includes("weak")) {
+            return "Password is too weak. Use at least 6 characters.";
+        }
+        if (msg.includes("invalid login credentials") || msg.includes("invalid credentials")) {
+            return "Incorrect email or password. Please try again.";
+        }
+        if (msg.includes("email not confirmed")) {
+            return "Please check your email inbox and confirm your email before signing in.";
+        }
+        return message;
+    };
+
     const handleSubmit = async () => {
         setLoading(true);
         setError("");
@@ -22,7 +45,7 @@ export default function AuthPage() {
         if (isLogin) {
             const { error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) {
-                setError(error.message);
+                setError(getFriendlyError(error.message));
             } else {
                 setMessage("Welcome back! Redirecting...");
                 setTimeout(() => window.location.href = "/", 1000);
@@ -30,12 +53,12 @@ export default function AuthPage() {
         } else {
             const { error: signUpError } = await supabase.auth.signUp({ email, password });
             if (signUpError) {
-                setError(signUpError.message);
+                setError(getFriendlyError(signUpError.message));
             } else {
                 // Automatically sign in the user after successful registration
                 const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
                 if (signInError) {
-                    setError(signInError.message);
+                    setError(getFriendlyError(signInError.message));
                 } else {
                     setMessage("Account created and logged in! Redirecting...");
                     setTimeout(() => window.location.href = "/", 1000);
