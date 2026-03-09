@@ -41,7 +41,11 @@ export default function Home() {
 
     const filtered = places.filter(p => {
         const matchCat = activeCategory === "All" || p.category === activeCategory || p.age_group === activeCategory;
-        const matchSearch = p.name?.toLowerCase().includes(searchQuery.toLowerCase()) || p.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        const q = searchQuery.toLowerCase();
+        const matchSearch = !q ||
+            p.name?.toLowerCase().includes(q) ||
+            p.description?.toLowerCase().includes(q) ||
+            p.category?.toLowerCase().includes(q);
         return matchCat && matchSearch;
     });
 
@@ -123,10 +127,12 @@ export default function Home() {
                             placeholder="🔍  Search for a place..."
                             style={{ flex: 1, border: "none", outline: "none", fontSize: 16, background: "transparent", color: "#1a1a2e" }}
                         />
-                        <button style={{
-                            padding: "12px 28px", borderRadius: 12, border: "none",
-                            background: "#2563EB", color: "white", fontWeight: 700, cursor: "pointer", fontSize: 15
-                        }}>Search</button>
+                        <button
+                            onClick={() => document.getElementById('places-grid')?.scrollIntoView({ behavior: 'smooth' })}
+                            style={{
+                                padding: "12px 28px", borderRadius: 12, border: "none",
+                                background: "#2563EB", color: "white", fontWeight: 700, cursor: "pointer", fontSize: 15
+                            }}>Search</button>
                     </div>
                 </div>
             </div>
@@ -153,7 +159,7 @@ export default function Home() {
             </div>
 
             {/* PLACES GRID */}
-            <div style={{ padding: "30px 40px 80px", maxWidth: 1200, margin: "0 auto" }}>
+            <div id="places-grid" style={{ padding: "30px 40px 80px", maxWidth: 1200, margin: "0 auto" }}>
                 <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 24, color: "#1E3A8A" }}>
                     {filtered.length} place{filtered.length !== 1 ? "s" : ""} found
                 </h2>
