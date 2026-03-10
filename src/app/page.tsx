@@ -20,6 +20,7 @@ export default function Home() {
     const [scrolled, setScrolled] = useState(false);
     const [places, setPlaces] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState<string | null>(null);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -29,8 +30,16 @@ export default function Home() {
 
     useEffect(() => {
         const fetchPlaces = async () => {
-            const { data, error } = await supabase.from('places').select('*');
-            if (data) {
+            setFetchError(null);
+            const { data, error } = await supabase
+                .from('places')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) {
+                console.error('Supabase fetch error:', error);
+                setFetchError(error.message);
+            }
+            if (data && data.length > 0) {
                 const colors = ["#E8F4FD", "#EDF2FF", "#F0FFF4", "#FFF5F5", "#FFFBEB", "#F3F0FF"];
                 setPlaces(data.map((p, i) => ({ ...p, color: colors[i % colors.length] })));
             }
@@ -163,6 +172,12 @@ export default function Home() {
                 <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 24, color: "#1E3A8A" }}>
                     {filtered.length} place{filtered.length !== 1 ? "s" : ""} found
                 </h2>
+                {fetchError && (
+                    <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 12, padding: "14px 18px", marginBottom: 24, color: "#DC2626", fontSize: 14 }}>
+                        <strong>Failed to load places:</strong> {fetchError}
+                        <br /><span style={{ color: "#B91C1C", fontSize: 12 }}>Tip: check Supabase RLS — add a public SELECT policy on the <code>places</code> table.</span>
+                    </div>
+                )}
                 {loading ? (
                     <div style={{ display: "flex", justifyContent: "center", padding: "60px 0" }}>
                         <div style={{ width: 40, height: 40, borderRadius: "50%", border: "4px solid #E2E8F0", borderTopColor: "#2563EB", animation: "spin 1s linear infinite" }} />
