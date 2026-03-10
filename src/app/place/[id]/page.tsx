@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { use } from "react";
 
-const supabaseUrl = "https://lvgancuxiogylgsipvxs.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2Z2FuY3V4aW9neWxnc2lwdnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3ODc5MDMsImV4cCI6MjA4ODM2MzkwM30.1cPop4exePi0V6PS1cR2A7t6_qbCGCh23J1WiE_UqeU";
+const supabaseUrl = "https://gpawpzohojdephlntls.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwYXdwem9ob2pkZXBoaGxudGxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzY0MzYsImV4cCI6MjA4ODcxMjQzNn0.xRmc0i6ALXKz20W3f_EKw2Pm0adOFbSlFe92LEzEqKs";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function PlacePage({ params }: { params: Promise<{ id: string }> }) {
