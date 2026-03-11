@@ -200,8 +200,12 @@ export default function Home() {
                                     (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
                                     (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 20px rgba(0,0,80,0.06)";
                                 }}>
-                                <div style={{ background: place.color || "#E8F4FD", height: 160, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 64 }}>
-                                    {place.emoji}
+                                <div style={{ background: place.color || "#E8F4FD", height: 160, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 64, overflow: "hidden" }}>
+                                    {place.image_url ? (
+                                        <img src={place.image_url} alt={place.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                    ) : (
+                                        place.emoji
+                                    )}
                                 </div>
                                 <div style={{ padding: "20px 24px" }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
