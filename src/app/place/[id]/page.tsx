@@ -51,11 +51,8 @@ function PhotoGallery({ photos, emoji }: { photos: string[]; emoji?: string }) {
                 alt={`Photo ${active + 1}`}
                 style={{ width: "100%", height: 380, objectFit: "cover", display: "block" }}
             />
-
-            {/* Gradient overlay */}
             <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 120, background: "linear-gradient(transparent, rgba(0,0,0,0.5))" }} />
 
-            {/* Navigation arrows */}
             {photos.length > 1 && (
                 <>
                     <button
@@ -81,7 +78,6 @@ function PhotoGallery({ photos, emoji }: { photos: string[]; emoji?: string }) {
                 </>
             )}
 
-            {/* Thumbnails */}
             {photos.length > 1 && (
                 <div style={{
                     position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)",
@@ -101,7 +97,6 @@ function PhotoGallery({ photos, emoji }: { photos: string[]; emoji?: string }) {
                 </div>
             )}
 
-            {/* Photo count badge */}
             <div style={{
                 position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)",
                 color: "white", borderRadius: 8, padding: "4px 10px", fontSize: 13, fontWeight: 600
@@ -167,7 +162,6 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
             return;
         }
 
-        // Refresh reviews
         const { data: reviewsData } = await supabase
             .from("reviews")
             .select("*")
@@ -185,7 +179,6 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
         ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
         : null;
 
-    // Parse photos: support JSON array or single URL
     const photos: string[] = (() => {
         if (!place) return [];
         if (place.photos) {
@@ -207,7 +200,7 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#F8FAFF", fontFamily: "'Segoe UI', sans-serif" }}>
             <div style={{ fontSize: 64, marginBottom: 16 }}>🗺️</div>
             <h1 style={{ color: "#1E3A8A", margin: "0 0 8px" }}>Place not found</h1>
-            <p style={{ color: "#64748B", marginBottom: 24 }}>This place doesn't exist or was removed.</p>
+            <p style={{ color: "#64748B", marginBottom: 24 }}>This place doesn&#39;t exist or was removed.</p>
             <button onClick={() => window.location.href = "/"} style={{ padding: "12px 28px", borderRadius: 12, border: "none", background: "#2563EB", color: "white", fontWeight: 600, cursor: "pointer", fontSize: 15 }}>
                 ← Back to Places
             </button>
@@ -253,13 +246,9 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
 
                 {/* PLACE CARD */}
                 <div style={{ background: "white", borderRadius: 24, overflow: "hidden", boxShadow: "0 10px 50px rgba(0,0,80,0.09)", marginBottom: 32 }}>
-
-                    {/* Photo Gallery */}
                     <PhotoGallery photos={photos} emoji={place.emoji} />
 
-                    {/* Place Info */}
                     <div style={{ padding: "36px 40px" }}>
-                        {/* Title Row */}
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
                             <h1 style={{ margin: 0, fontWeight: 900, fontSize: 34, color: "#1E3A8A", lineHeight: 1.1 }}>
                                 {place.name}
@@ -278,9 +267,7 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
                             </div>
                         </div>
 
-                        {/* Meta row */}
                         <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginBottom: 24 }}>
-                            {/* Rating */}
                             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                 <div style={{ display: "flex" }}>
                                     {[1, 2, 3, 4, 5].map(s => (
@@ -294,23 +281,16 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
                                     ({reviews.length} review{reviews.length !== 1 ? "s" : ""})
                                 </span>
                             </div>
-
-                            {/* Address */}
                             {place.address && (
                                 <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#64748B", fontSize: 15 }}>
-                                    <span style={{ fontSize: 16 }}>📍</span>
-                                    {place.address}
+                                    <span style={{ fontSize: 16 }}>📍</span> {place.address}
                                 </div>
                             )}
-
-                            {/* Phone */}
                             {place.phone && (
                                 <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#64748B", fontSize: 15 }}>
                                     <span>📞</span> {place.phone}
                                 </div>
                             )}
-
-                            {/* Website */}
                             {place.website && (
                                 <a href={place.website} target="_blank" rel="noopener noreferrer"
                                     style={{ display: "flex", alignItems: "center", gap: 6, color: "#2563EB", fontSize: 15, textDecoration: "none", fontWeight: 600 }}>
@@ -319,12 +299,10 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
                             )}
                         </div>
 
-                        {/* Description */}
                         <p style={{ color: "#475569", fontSize: 16, lineHeight: 1.75, margin: 0 }}>
                             {place.description}
                         </p>
 
-                        {/* Hours */}
                         {place.hours && (
                             <div style={{ marginTop: 24, padding: "16px 20px", background: "#FAFBFF", borderRadius: 12, border: "1px solid #E2E8F0" }}>
                                 <div style={{ fontWeight: 700, color: "#1E3A8A", marginBottom: 6, fontSize: 14 }}>⏰ Opening Hours</div>
@@ -336,11 +314,8 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
 
                 {/* REVIEWS SECTION */}
                 <div style={{ background: "white", borderRadius: 24, padding: "40px", boxShadow: "0 10px 50px rgba(0,0,80,0.09)" }}>
-                    {/* Section header */}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-                        <h2 style={{ margin: 0, fontWeight: 800, fontSize: 26, color: "#1E3A8A" }}>
-                            Reviews
-                        </h2>
+                        <h2 style={{ margin: 0, fontWeight: 800, fontSize: 26, color: "#1E3A8A" }}>Reviews</h2>
                         {reviews.length > 0 && (
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
                                 <div style={{ fontSize: 32, fontWeight: 900, color: "#1E3A8A", lineHeight: 1 }}>{avgRating}</div>
@@ -361,14 +336,10 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
                                 <h3 style={{ margin: "0 0 20px", fontSize: 17, color: "#1E3A8A", fontWeight: 700 }}>
                                     ✍️ Leave a Review
                                 </h3>
-
-                                {/* Star picker */}
                                 <div style={{ marginBottom: 20 }}>
                                     <div style={{ fontSize: 13, fontWeight: 600, color: "#64748B", marginBottom: 8 }}>Your Rating</div>
                                     <StarRating rating={rating} onRate={setRating} />
                                 </div>
-
-                                {/* Comment */}
                                 <div style={{ marginBottom: 20 }}>
                                     <div style={{ fontSize: 13, fontWeight: 600, color: "#64748B", marginBottom: 8 }}>Your Comment</div>
                                     <textarea
@@ -459,7 +430,6 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
                                     }}
                                 >
                                     <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                                        {/* Avatar */}
                                         <div style={{
                                             width: 44, height: 44, borderRadius: "50%",
                                             background: `hsl(${(review.user_id?.charCodeAt(0) || 0) * 37 % 360}, 60%, 85%)`,
@@ -468,16 +438,13 @@ export default function PlacePage({ params }: { params: Promise<{ id: string }> 
                                         }}>
                                             {(review.user_id || "U")[0].toUpperCase()}
                                         </div>
-
                                         <div style={{ flex: 1 }}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
-                                                {/* Stars */}
                                                 <div style={{ display: "flex" }}>
                                                     {[1, 2, 3, 4, 5].map(s => (
                                                         <span key={s} style={{ color: s <= review.rating ? "#F59E0B" : "#D1D5DB", fontSize: 15 }}>★</span>
                                                     ))}
                                                 </div>
-                                                {/* Date */}
                                                 {review.created_at && (
                                                     <span style={{ color: "#94A3B8", fontSize: 13 }}>
                                                         {new Date(review.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
