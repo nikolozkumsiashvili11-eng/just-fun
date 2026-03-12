@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 const supabaseUrl = "https://gpawpzohojdephhlntls.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwYXdwem9ob2pkZXBoaGxudGxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzY0MzYsImV4cCI6MjA4ODcxMjQzNn0.xRmc0i6ALXKz20W3f_EKw2Pm0adOFbSlFe92LEzEqKs";
@@ -9,6 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const categories = ["All", "Kids", "Adults", "All Ages", "Family", "Nightlife", "Sports"];
 
 export default function Home() {
+    const router = useRouter();
     const [activeCategory, setActiveCategory] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [aiOpen, setAiOpen] = useState(false);
@@ -186,7 +188,7 @@ export default function Home() {
                 ) : (
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24 }}>
                         {filtered.map(place => (
-                            <div key={place.id} onClick={() => window.location.href = `/place/${place.id}`} style={{
+                            <div key={place.id} onClick={() => router.push(`/place/${place.id}`)} style={{
                                 background: "white", borderRadius: 20, overflow: "hidden",
                                 boxShadow: "0 4px 20px rgba(0,0,80,0.06)",
                                 transition: "transform 0.2s ease, box-shadow 0.2s ease",
