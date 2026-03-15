@@ -10,7 +10,7 @@ const supabase = createClient(
 const CATEGORIES = ["Kids", "Family", "Nightlife", "Food", "Sports", "Adults", "All Ages"];
 
 const empty = {
-  name: "", description: "", category: "Kids", address: "", city: "",
+  name: "", description: "", category: "Kids", address: "", city: "Tbilisi",
   rating: "4", image_url: "",
 };
 
