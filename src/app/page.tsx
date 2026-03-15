@@ -22,6 +22,7 @@ export default function Home() {
     ]);
     const [aiLoading, setAiLoading] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const [places, setPlaces] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
@@ -91,23 +92,90 @@ export default function Home() {
     return (
         <div style={{ fontFamily: "'Segoe UI', sans-serif", background: "#F8FAFF", minHeight: "100vh", color: "#1a1a2e" }}>
 
+            {/* MOBILE MENU STYLES */}
+            <style>{`
+                .nav-desktop-btns { display: flex; gap: 12px; }
+                .nav-hamburger { display: none; }
+                .nav-mobile-dropdown { display: none; }
+                @media (max-width: 640px) {
+                    .nav-desktop-btns { display: none !important; }
+                    .nav-hamburger { display: flex !important; }
+                    .nav-mobile-dropdown { display: block !important; }
+                }
+            `}</style>
+
             {/* NAV */}
             <nav style={{
                 position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-                background: scrolled ? "rgba(255,255,255,0.95)" : "transparent",
-                backdropFilter: scrolled ? "blur(12px)" : "none",
-                boxShadow: scrolled ? "0 2px 20px rgba(0,0,80,0.08)" : "none",
+                background: scrolled || menuOpen ? "rgba(255,255,255,0.97)" : "transparent",
+                backdropFilter: scrolled || menuOpen ? "blur(12px)" : "none",
+                boxShadow: scrolled || menuOpen ? "0 2px 20px rgba(0,0,80,0.08)" : "none",
                 transition: "all 0.3s ease",
-                padding: "16px 40px",
-                display: "flex", alignItems: "center", justifyContent: "space-between"
             }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 28 }}>🎉</span>
-                    <span style={{ fontWeight: 800, fontSize: 22, color: "#2563EB", letterSpacing: "-0.5px" }}>Just Fun</span>
+                <div style={{ padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: 28 }}>🎉</span>
+                        <span style={{ fontWeight: 800, fontSize: 22, color: "#2563EB", letterSpacing: "-0.5px" }}>Just Fun</span>
+                    </div>
+
+                    {/* Desktop buttons */}
+                    <div className="nav-desktop-btns">
+                        <button onClick={() => window.location.href = '/auth'} style={{ padding: "8px 20px", borderRadius: 10, border: "2px solid #2563EB", background: "white", color: "#2563EB", fontWeight: 600, cursor: "pointer", fontSize: 14 }}>Sign In</button>
+                        <button onClick={() => window.location.href = '/auth'} style={{ padding: "8px 20px", borderRadius: 10, border: "none", background: "#2563EB", color: "white", fontWeight: 600, cursor: "pointer", fontSize: 14 }}>Register</button>
+                    </div>
+
+                    {/* Hamburger button — mobile only */}
+                    <button
+                        className="nav-hamburger"
+                        onClick={() => setMenuOpen(o => !o)}
+                        style={{
+                            background: "none", border: "none", cursor: "pointer",
+                            fontSize: 26, color: scrolled || menuOpen ? "#1E3A8A" : "white",
+                            alignItems: "center", justifyContent: "center",
+                            width: 40, height: 40, borderRadius: 8,
+                            transition: "color 0.2s"
+                        }}
+                        aria-label="Toggle menu"
+                    >
+                        {menuOpen ? "✕" : "☰"}
+                    </button>
                 </div>
-                <div style={{ display: "flex", gap: 12 }}>
-                    <button onClick={() => window.location.href = '/auth'} style={{ padding: "8px 20px", borderRadius: 10, border: "2px solid #2563EB", background: "white", color: "#2563EB", fontWeight: 600, cursor: "pointer", fontSize: 14 }}>Sign In</button>
-                    <button onClick={() => window.location.href = '/auth'} style={{ padding: "8px 20px", borderRadius: 10, border: "none", background: "#2563EB", color: "white", fontWeight: 600, cursor: "pointer", fontSize: 14 }}>Register</button>
+
+                {/* Mobile dropdown */}
+                <div
+                    className="nav-mobile-dropdown"
+                    style={{
+                        overflow: "hidden",
+                        maxHeight: menuOpen ? 300 : 0,
+                        transition: "max-height 0.3s ease",
+                        borderTop: menuOpen ? "1px solid #E2E8F0" : "none",
+                    }}
+                >
+                    {[
+                        { label: "🏠  Home", href: "/" },
+                        { label: "🗂  Categories", href: "#places-grid" },
+                        { label: "ℹ️  About", href: "/" },
+                    ].map(link => (
+                        <a
+                            key={link.label}
+                            href={link.href}
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                                display: "block", padding: "14px 24px",
+                                color: "#1E3A8A", fontWeight: 600, fontSize: 15,
+                                textDecoration: "none", borderBottom: "1px solid #F1F5F9",
+                                transition: "background 0.15s",
+                            }}
+                            onMouseEnter={e => (e.currentTarget.style.background = "#EFF6FF")}
+                            onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                        >
+                            {link.label}
+                        </a>
+                    ))}
+                    <div style={{ padding: "14px 24px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+                        <button onClick={() => { setMenuOpen(false); window.location.href = '/auth'; }} style={{ padding: "12px", borderRadius: 10, border: "2px solid #2563EB", background: "white", color: "#2563EB", fontWeight: 600, cursor: "pointer", fontSize: 14 }}>Sign In</button>
+                        <button onClick={() => { setMenuOpen(false); window.location.href = '/auth'; }} style={{ padding: "12px", borderRadius: 10, border: "none", background: "#2563EB", color: "white", fontWeight: 600, cursor: "pointer", fontSize: 14 }}>Register</button>
+                    </div>
                 </div>
             </nav>
 
