@@ -3,10 +3,16 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter, useParams } from "next/navigation";
 
-const supabase = createClient(
-  "https://gpawpzohojdephhlntls.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwYXdwem9ob2pkZXBoaGxudGxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzY0MzYsImV4cCI6MjA4ODcxMjQzNn0.xRmc0i6ALXKz20W3f_EKw2Pm0adOFbSlFe92LEzEqKs"
-);
+const supabaseUrl = "https://gpawpzohojdephhlntls.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwYXdwem9ob2pkZXBoaGxudGxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzY0MzYsImV4cCI6MjA4ODcxMjQzNn0.xRmc0i6ALXKz20W3f_EKw2Pm0adOFbSlFe92LEzEqKs";
+
+// Public client for reading data — never uses stored auth sessions
+const supabasePublic = createClient(supabaseUrl, supabaseKey, {
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+});
+
+// Auth-aware client for user operations (getUser, insert review)
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function PlacePage() {
   const router = useRouter();
@@ -24,11 +30,11 @@ export default function PlacePage() {
   useEffect(() => {
     if (!id) return;
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    supabase.from("places").select("*").eq("id", id).single().then(({ data }) => {
+    supabasePublic.from("places").select("*").eq("id", id).single().then(({ data }) => {
       setPlace(data);
       setLoading(false);
     });
-    supabase.from("reviews").select("*").eq("place_id", id).order("created_at", { ascending: false }).then(({ data }) => {
+    supabasePublic.from("reviews").select("*").eq("place_id", id).order("created_at", { ascending: false }).then(({ data }) => {
       setReviews(data || []);
     });
   }, [id]);
@@ -39,7 +45,7 @@ export default function PlacePage() {
     await supabase.from("reviews").insert({ place_id: id, user_id: user.id, rating, comment });
     setComment("");
     setRating(5);
-    const { data } = await supabase.from("reviews").select("*").eq("place_id", id).order("created_at", { ascending: false });
+    const { data } = await supabasePublic.from("reviews").select("*").eq("place_id", id).order("created_at", { ascending: false });
     setReviews(data || []);
     setSubmitting(false);
   }
